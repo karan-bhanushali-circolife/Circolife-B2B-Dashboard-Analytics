@@ -1,10 +1,11 @@
 import AsidePage from "./AsidePage";
 import { Link } from "react-router-dom";
 import EChartsReact from "echarts-for-react";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import axios from "axios";
 import HeaderPage from "./HeaderPage";
 import AddressPopup from "./AddressPopup";
+import { AddressContext } from "./AddressContext";
 
 const Analytics = () => {
   const [powerData, setPowerData] = useState([]);
@@ -18,6 +19,7 @@ const Analytics = () => {
   const [selectedDateValue, setSelectedDateValue] = useState("");
   const locations = ["Andheri", "Malad", "Kandivali"];
   const [isPickerVisible, setIsPickerVisible] = useState(false);
+  const { selectedAddressesCount } = useContext(AddressContext);
   const dummyData = {
     Today: {
       Andheri: {
@@ -383,9 +385,8 @@ const Analytics = () => {
                       fill="#9564C6"
                     />
                   </svg>
-
                   <p className="text-base font-normal from-neutral-400 leading-normal tracking-tight">
-                    Total Locations
+                    Total Locations : {selectedAddressesCount}
                   </p>
                 </div>
                 <p className="mt-3 text-fontCustom font-normal from-neutral-500 text-3xl text-right">
@@ -557,9 +558,9 @@ const Analytics = () => {
               >
                 <p className="text-base from-neutral-400 font-normal">
                   {/* {selectedLocation} */}
-                  Select Address
+                  All Locations
                 </p>
-                <svg
+                {/* <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="16"
                   height="10"
@@ -570,7 +571,7 @@ const Analytics = () => {
                     d="M1.88 -0.000117302L8 6.10655L14.12 -0.000117302L16 1.87988L8 9.87988L0 1.87988L1.88 -0.000117302Z"
                     fill="#0E0E0F"
                   />
-                </svg>
+                </svg> */}
               </div>
               {isOpen && (
                 <ul className="absolute mt-1 w-full border border-custombordercolor rounded-customBorderRounded bg-white z-10 overflow-hidden py-4">

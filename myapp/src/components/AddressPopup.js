@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { AddressContext } from "./AddressContext";
 const AddressPopup = ({
   displayModal,
   handleDisplayModal,
@@ -8,6 +9,9 @@ const AddressPopup = ({
   const [selectAll, setSelectAll] = useState(false);
   const [customSelect, setCustomSelect] = useState(false);
   const [selectedAddresses, setSelectedAddresses] = useState({});
+  // const [selectedAddressesCount, setSelectedAddressesCount] = useState("");
+  const { selectedAddressesCount, setSelectedAddressesCount } =
+    useContext(AddressContext);
   const userAddresses = [
     {
       id: "100",
@@ -50,6 +54,10 @@ const AddressPopup = ({
         "Flat-104 1st Floor Shivanjali Society, Dr Ambedkar Road, Off Carter Rd, near Ambedkar Statue, Khar West, Mumbai, Maharashtra 400052, India",
     },
   ];
+  const [matchingUserAddress, setMatchingUserAddress] = useState(userAddresses);
+  const [maxSelectedAddress, setMaxSelectedAddress] = useState(
+    userAddresses.length
+  );
   const handleSelectAll = (e) => {
     const isChecked = e.target.checked;
     setSelectAll(isChecked);
@@ -59,12 +67,27 @@ const AddressPopup = ({
       newSelectedAddresses[address.id] = isChecked;
     });
     setSelectedAddresses(newSelectedAddresses);
+    // setSelectedAddressesCount(selectedAddresses.length());
+    setSelectedAddressesCount(Object.keys(selectedAddresses).length);
+    // if (selectedAddresses.length() === 0) {
+    if (Object.keys(selectedAddresses).length === 0) {
+      setSelectedAddresses("Null");
+    }
+    // } else if (selectedAddressesCount === maxSelectedAddress) {
+    else if (selectedAddressesCount === maxSelectedAddress) {
+      setSelectedAddressesCount("All");
+    } else {
+      // setSelectedAddressesCount(selectedAddresses.length());
+      setSelectedAddressesCount(Object.keys(selectedAddresses).length);
+    }
   };
 
   const handleCustomSelect = (e) => {
     const isChecked = e.target.checked;
     setCustomSelect(isChecked);
     setSelectAll(false);
+    setSelectedAddresses({});
+    setSelectedAddressesCount("Null");
   };
 
   const handleAddressSelect = (id) => {
@@ -72,21 +95,35 @@ const AddressPopup = ({
       ...prev,
       [id]: !prev[id],
     }));
+    const allSelected = userAddresses.every(
+      (address) => selectedAddresses[address.id] || address.id === id
+    );
 
-    const allSelected = Object.values({
-      ...selectedAddresses,
-      [id]: !selectedAddresses[id],
-    }).every(Boolean);
     setSelectAll(allSelected);
+    setCustomSelect(!allSelected);
+  };
+  const handleInputChangeAddress = (e) => {
+    const input = e.target.value;
+    setLocationQuery(input);
+
+    if (input.length > 0) {
+      const filtered = userAddresses.filter((order) =>
+        order.userAddress?.toLowerCase().includes(input.toLowerCase())
+      );
+      setMatchingUserAddress(filtered);
+    } else {
+      setMatchingUserAddress(userAddresses);
+    }
   };
   return (
     <div className="fixed inset-0 flex justify-center items-center z-50 bg-black bg-opacity-50">
-      <div className="rounded-xl bg-background w-[60%] h-[70%] border p-5 m-[20%] max-w-[90%] max-h-[90%]">
+      <div className="rounded-xl bg-background w-[60%] h-[75%] border m-[20%] max-w-[90%] max-h-[90%] p-8">
         <div className="relative mb-4">
           <input
             type="text"
             placeholder="Search location"
             value={locationQuery}
+            onChange={handleInputChangeAddress}
             // className="w-full py-4 px-16 pr-20 border placeholder:text-subtext rounded-full border-gray-300 text-base bg-background outline-primary"
             className="w-full py-4 px-14 pr-20 border border-borderborder rounded-full bg-background outline-primary placeholder:font-extralight font-extralight text-sm appearance-none"
           />
@@ -148,8 +185,10 @@ const AddressPopup = ({
             </p>
           </div>
         </div>
-        <div className="grid grid-cols-4 gap-4 p-4">
-          {userAddresses.map((address) => (
+        {/* <div className="grid grid-cols-4 gap-4 p-4"> */}
+        <div className="grid grid-cols-4 gap-4">
+          {/* {userAddresses.map((address) => ( */}
+          {matchingUserAddress.map((address) => (
             <div
               key={address.id}
               className="flex flex-row items-start space-x-2"
