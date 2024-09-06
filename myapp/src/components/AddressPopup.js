@@ -9,7 +9,6 @@ const AddressPopup = ({
   const [selectAll, setSelectAll] = useState(false);
   const [customSelect, setCustomSelect] = useState(false);
   const [selectedAddresses, setSelectedAddresses] = useState({});
-  // const [selectedAddressesCount, setSelectedAddressesCount] = useState("");
   const { selectedAddressesCount, setSelectedAddressesCount } =
     useContext(AddressContext);
   const userAddresses = [
@@ -62,24 +61,18 @@ const AddressPopup = ({
     const isChecked = e.target.checked;
     setSelectAll(isChecked);
     setCustomSelect(false);
+
     const newSelectedAddresses = {};
-    userAddresses.forEach((address) => {
-      newSelectedAddresses[address.id] = isChecked;
-    });
-    setSelectedAddresses(newSelectedAddresses);
-    // setSelectedAddressesCount(selectedAddresses.length());
-    setSelectedAddressesCount(Object.keys(selectedAddresses).length);
-    // if (selectedAddresses.length() === 0) {
-    if (Object.keys(selectedAddresses).length === 0) {
-      setSelectedAddresses("Null");
-    }
-    // } else if (selectedAddressesCount === maxSelectedAddress) {
-    else if (selectedAddressesCount === maxSelectedAddress) {
-      setSelectedAddressesCount("All");
+    if (isChecked) {
+      userAddresses.forEach((address) => {
+        newSelectedAddresses[address.id] = true;
+      });
+      setSelectedAddressesCount(userAddresses.length);
     } else {
-      // setSelectedAddressesCount(selectedAddresses.length());
-      setSelectedAddressesCount(Object.keys(selectedAddresses).length);
+      setSelectedAddressesCount(0);
     }
+
+    setSelectedAddresses(newSelectedAddresses);
   };
 
   const handleCustomSelect = (e) => {
@@ -91,16 +84,23 @@ const AddressPopup = ({
   };
 
   const handleAddressSelect = (id) => {
-    setSelectedAddresses((prev) => ({
-      ...prev,
-      [id]: !prev[id],
-    }));
-    const allSelected = userAddresses.every(
-      (address) => selectedAddresses[address.id] || address.id === id
-    );
+    const newSelectedAddresses = {
+      ...selectedAddresses,
+      [id]: !selectedAddresses[id],
+    };
+    setSelectedAddresses(newSelectedAddresses);
 
-    setSelectAll(allSelected);
-    setCustomSelect(!allSelected);
+    // Calculate the new count of selected addresses
+    const selectedCount =
+      Object.values(newSelectedAddresses).filter(Boolean).length;
+
+    setSelectedAddressesCount(selectedCount);
+    if (selectedCount === userAddresses.length) {
+      setSelectAll(true);
+    } else {
+      setSelectAll(false);
+      setCustomSelect(selectedCount > 0);
+    }
   };
   const handleInputChangeAddress = (e) => {
     const input = e.target.value;
@@ -169,19 +169,6 @@ const AddressPopup = ({
             />
             <p for="myCheckbox" className="text-neutral-400 text-base">
               Select all
-            </p>
-          </div>
-          <div className="flex flex-row gap-3.5">
-            <input
-              type="checkbox"
-              id="customCheckbox"
-              name="customCheckbox"
-              className="w-6 h-6 rounded-none border"
-              checked={customSelect}
-              onChange={handleCustomSelect}
-            />
-            <p for="myCheckbox" className="text-neutral-400 text-base">
-              Custom
             </p>
           </div>
         </div>

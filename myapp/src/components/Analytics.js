@@ -558,20 +558,8 @@ const Analytics = () => {
               >
                 <p className="text-base from-neutral-400 font-normal">
                   {/* {selectedLocation} */}
-                  All Locations
+                  Selected Locations : {selectedAddressesCount}
                 </p>
-                {/* <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="10"
-                  viewBox="0 0 16 10"
-                  fill="none"
-                >
-                  <path
-                    d="M1.88 -0.000117302L8 6.10655L14.12 -0.000117302L16 1.87988L8 9.87988L0 1.87988L1.88 -0.000117302Z"
-                    fill="#0E0E0F"
-                  />
-                </svg> */}
               </div>
               {isOpen && (
                 <ul className="absolute mt-1 w-full border border-custombordercolor rounded-customBorderRounded bg-white z-10 overflow-hidden py-4">
