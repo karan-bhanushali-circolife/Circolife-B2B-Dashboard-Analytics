@@ -386,7 +386,7 @@ const Analytics = () => {
                     />
                   </svg>
                   <p className="text-base font-normal from-neutral-400 leading-normal tracking-tight">
-                    Total Locations : {selectedAddressesCount}
+                    Total Locations
                   </p>
                 </div>
                 <p className="mt-3 text-fontCustom font-normal from-neutral-500 text-3xl text-right">
