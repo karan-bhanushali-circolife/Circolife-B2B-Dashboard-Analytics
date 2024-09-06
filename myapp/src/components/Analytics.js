@@ -496,8 +496,8 @@ const Analytics = () => {
           </div>
           <div className="flex mt-3 justify-between">
             <div className="w-full md:w-4/5 lg:w-4/6">
-              <div className="flex flex-wrap justify-start items-center text-left border border-custombordercolor rounded-customBorderRounded p-4 md:p-4">
-                <div className="flex flex-wrap items-center justify-between w-full gap-2 md:gap-4">
+              <div className="flex flex-col h-full border border-custombordercolor rounded-customBorderRounded p-4">
+                <div className="flex flex-wrap items-center justify-between w-full gap-2 md:gap-4 flex-grow">
                   {["Today", "7 Days", "14 Days", "1 Month", "3 Months"].map(
                     (range) => (
                       <button
@@ -552,8 +552,12 @@ const Analytics = () => {
               </div>
             </div>
             <div ref={dropdownRef} className="relative w-1/4">
-              <div
+              {/* <div
                 className="flex justify-between border-custombordercolor rounded-customBorderRounded border py-4 px-4 items-center cursor-pointer"
+                onClick={handleButtonClickedPopupOpen}
+              > */}
+              <div
+                className="flex items-center border border-custombordercolor rounded-customBorderRounded p-4 h-full cursor-pointer"
                 onClick={handleButtonClickedPopupOpen}
               >
                 <p className="text-base from-neutral-400 font-normal">

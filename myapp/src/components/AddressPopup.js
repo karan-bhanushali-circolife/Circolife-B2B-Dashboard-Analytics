@@ -158,18 +158,21 @@ const AddressPopup = ({
           </button>
         </div>
         <div className="flex flex-row my-[1.60%] gap-16">
-          <div className="flex flex-row gap-3.5">
+          <div className="flex gap-3.5 items-center">
             <input
               type="checkbox"
               id="selectAllCheckbox"
               name="selectAllCheckbox"
-              className="w-6 h-6 rounded-none border"
+              className="w-[13px] h-[13px] rounded-none border bg-primary"
               checked={selectAll}
               onChange={handleSelectAll}
             />
-            <p for="myCheckbox" className="text-neutral-400 text-base">
+            <label
+              htmlFor="selectAllCheckbox"
+              className="text-neutral-400 text-base"
+            >
               Select all
-            </p>
+            </label>
           </div>
         </div>
         {/* <div className="grid grid-cols-4 gap-4 p-4"> */}
@@ -184,10 +187,11 @@ const AddressPopup = ({
                 type="checkbox"
                 id={`checkbox-${address.id}`}
                 name={`checkbox-${address.id}`}
-                className="w-6 h-6 mt-1 rounded-none flex-shrink-0"
+                className="w-[13px] h-[13px] mt-1 rounded-none flex-shrink-0 bg-primary"
                 checked={selectedAddresses[address.id] || false}
                 onChange={() => handleAddressSelect(address.id)}
               />
+
               <div className="border-2 p-2 rounded-lg bg-background w-full h-48 overflow-hidden flex flex-col">
                 <p className="text-base text-servicetext font-normal text-left flex-grow overflow-hidden">
                   {address.userAddress || address.userAddresses}
