@@ -9,17 +9,77 @@ import { AddressContext } from "./AddressContext";
 
 const Analytics = () => {
   const [powerData, setPowerData] = useState([]);
-  const [selecteddatetime, setselecteddatetime] = useState("7 Days");
+  const [selecteddatetime, setselecteddatetime] = useState("Today");
   const [selectedLocation, setSelectedLocation] = useState("Andheri");
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
   const dateInputRef = useRef(null);
   const username = localStorage.getItem("username");
   const [customerData, setCustomerData] = useState(null);
-  const [selectedDateValue, setSelectedDateValue] = useState("");
+  const [selectedDateValue, setSelectedDateValue] = useState(() => {
+    const today = new Date();
+    const options = { day: "numeric", month: "long" };
+    return today.toLocaleDateString("en-GB", options);
+  });
+  const [selectedStartDateValue, setSelectedStartDateValue] = useState("");
   const locations = ["Andheri", "Malad", "Kandivali"];
   const [isPickerVisible, setIsPickerVisible] = useState(false);
   const { selectedAddressesCount } = useContext(AddressContext);
+  const [rangeValueDate, setRangeValueDate] = useState("");
+  const handleChangeInputDate = (e) => {
+    const inputValue = e.target.value;
+
+    if (inputValue === "") {
+      const today = new Date();
+      const options = { day: "numeric", month: "long" };
+      const formattedDate = today.toLocaleDateString("en-GB", options);
+      setRangeValueDate(formattedDate);
+    } else {
+      console.log("Selected date:", inputValue);
+      const date = new Date(inputValue);
+      const options = { day: "numeric", month: "long" };
+      const formattedDate = date.toLocaleDateString("en-GB", options);
+      setRangeValueDate(formattedDate);
+    }
+
+    setIsPickerVisible(false);
+  };
+
+  useEffect(() => {
+    const handleSetRangeValue = () => {
+      const endDate = new Date();
+      let startDate = new Date(endDate);
+
+      if (selecteddatetime === "7 Days") {
+        startDate.setDate(endDate.getDate() - 7);
+      } else if (selecteddatetime === "14 Days") {
+        startDate.setDate(endDate.getDate() - 14);
+      } else if (selecteddatetime === "1 Month") {
+        startDate.setMonth(endDate.getMonth() - 1);
+      } else if (selecteddatetime === "3 Months") {
+        startDate.setMonth(endDate.getMonth() - 3);
+      } else if (selecteddatetime === "Today") {
+        startDate = new Date(selectedDateValue);
+      }
+
+      const options = { day: "numeric", month: "long" };
+      const formattedStartDate =
+        startDate instanceof Date
+          ? startDate.toLocaleDateString("en-GB", options)
+          : "";
+      const formattedEndDate = endDate.toLocaleDateString("en-GB", options);
+
+      const rangeValue =
+        selecteddatetime === "Today"
+          ? formattedEndDate
+          : `${formattedStartDate} - ${formattedEndDate}`;
+
+      setRangeValueDate(rangeValue);
+    };
+
+    handleSetRangeValue();
+  }, [selecteddatetime, selectedDateValue]);
+
   const dummyData = {
     Today: {
       Andheri: {
@@ -308,25 +368,6 @@ const Analytics = () => {
   const deviceId = "A0:A3:B3:72:4D:AC";
   const days = "7 days";
 
-  const handleChangeInputDate = (e) => {
-    const inputValue = e.target.value;
-
-    if (inputValue === "") {
-      const today = new Date();
-      const options = { day: "numeric", month: "long" };
-      const formattedDate = today.toLocaleDateString("en-GB", options);
-      setSelectedDateValue(formattedDate);
-    } else {
-      console.log("Selected date:", inputValue);
-      const date = new Date(inputValue);
-      const options = { day: "numeric", month: "long" };
-      const formattedDate = date.toLocaleDateString("en-GB", options);
-      setSelectedDateValue(formattedDate);
-    }
-
-    setIsPickerVisible(false);
-  };
-
   return (
     <div className="flex min-h-screen bg-myCustomBackgroundColor font-sans">
       <AsidePage />
@@ -554,6 +595,7 @@ const Analytics = () => {
                       ref={dateInputRef}
                       className="absolute opacity-0 w-0 h-0"
                       onChange={handleChangeInputDate}
+                      max={new Date().toISOString().split("T")[0]}
                     />
                   </div>
                 </div>
@@ -584,7 +626,7 @@ const Analytics = () => {
             </div>
           </div>
           <p className="from-neutral-500 text-lg ml-[0.25%] text-left mt-14">
-            {selectedDateValue}
+            {/* {selectedDateValue} */} {rangeValueDate}
           </p>
           <div className="flex justify-around">
             <div className="w-3/4 justify-start">
