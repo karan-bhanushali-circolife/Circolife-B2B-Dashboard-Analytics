@@ -292,9 +292,6 @@ const Analytics = () => {
       }
     };
     document.addEventListener("click", handleMouseClick);
-    // return () => {
-    //   document.removeEventListener("click", handleClickOutside);
-    // };
   }, []);
   const {
     currentConsumption,
@@ -312,13 +309,24 @@ const Analytics = () => {
   const days = "7 days";
 
   const handleChangeInputDate = (e) => {
-    console.log("Selected date:", e.target.value);
+    const inputValue = e.target.value;
+
+    if (inputValue === "") {
+      const today = new Date();
+      const options = { day: "numeric", month: "long" };
+      const formattedDate = today.toLocaleDateString("en-GB", options);
+      setSelectedDateValue(formattedDate);
+    } else {
+      console.log("Selected date:", inputValue);
+      const date = new Date(inputValue);
+      const options = { day: "numeric", month: "long" };
+      const formattedDate = date.toLocaleDateString("en-GB", options);
+      setSelectedDateValue(formattedDate);
+    }
+
     setIsPickerVisible(false);
-    const date = new Date(e.target.value);
-    const options = { day: "numeric", month: "long" };
-    const formattedDate = date.toLocaleDateString("en-GB", options);
-    setSelectedDateValue(formattedDate);
   };
+
   return (
     <div className="flex min-h-screen bg-myCustomBackgroundColor font-sans">
       <AsidePage />
@@ -494,15 +502,15 @@ const Analytics = () => {
               </div>
             </div>
           </div>
-          <div className="flex mt-3 justify-between">
-            <div className="w-full md:w-4/5 lg:w-4/6">
-              <div className="flex flex-col h-full border border-custombordercolor rounded-customBorderRounded p-4">
+          <div className="flex flex-row w-full gap-[5%]">
+            <div className="w-[85%] lg:w-[70%]">
+              <div className="flex flex-col h-full border border-custombordercolor rounded-customBorderRounded px-4 py-2">
                 <div className="flex flex-wrap items-center justify-between w-full gap-2 md:gap-4 flex-grow">
                   {["Today", "7 Days", "14 Days", "1 Month", "3 Months"].map(
                     (range) => (
                       <button
                         key={range}
-                        className={`flex-1 min-w-[80px] text-sm md:text-base font-normal text-neutral-700 cursor-pointer px-2 md:px-4 py-2 rounded-full hover:bg-hoverFontColor transition-colors ${
+                        className={`flex-1 min-w-[60px] text-sm md:text-base font-normal text-neutral-700 cursor-pointer px-1 md:px-2 py-1 rounded-full hover:bg-hoverFontColor transition-colors ${
                           selecteddatetime === range
                             ? "bg-hoverFontColor"
                             : "bg-transparent"
@@ -514,7 +522,7 @@ const Analytics = () => {
                     )
                   )}
                   <div
-                    className="bg-calendarWrapperColor rounded-full p-2 md:p-3 cursor-pointer hover:bg-gray-200 transition-colors"
+                    className="bg-calendarWrapperColor rounded-full p-2 md:p-3 cursor-pointer hover:bg-hoverFontColor transition-colors"
                     onClick={handleIconClick}
                   >
                     <svg
@@ -524,11 +532,11 @@ const Analytics = () => {
                       fill="none"
                       xmlns="http://www.w3.org/2000/svg"
                     >
-                      <g clipPath="url(#clip0_1029_2811)">
+                      <g clip-path="url(#clip0_1029_2811)">
                         <path
                           d="M18.233 2.35041L13.523 2.35043V1.17808C13.523 0.853079 13.2598 0.589844 12.9348 0.589844C12.6098 0.589844 12.3465 0.853079 12.3465 1.17808V2.35014H7.64064V1.17808C7.64064 0.853079 7.37741 0.589844 7.05241 0.589844C6.72741 0.589844 6.46417 0.853079 6.46417 1.17808V2.35014H1.76241C1.1127 2.35014 0.585938 2.8769 0.585938 3.52661V18.2325C0.585938 18.8822 1.1127 19.409 1.76241 19.409H18.233C18.8827 19.409 19.4095 18.8822 19.4095 18.2325V3.52661C19.4095 2.87718 18.8827 2.35041 18.233 2.35041ZM18.233 18.2325H1.76241V3.52661H6.46417V4.11925C6.46417 4.44424 6.72741 4.70749 7.05241 4.70749C7.37741 4.70749 7.64064 4.44424 7.64064 4.11925V3.5269H12.3465V4.11955C12.3465 4.44455 12.6098 4.70778 12.9348 4.70778C13.2598 4.70778 13.523 4.44455 13.523 4.11955V3.5269H18.233V18.2325Z"
                           fill="#0E0E0F"
-                        />
+                        ></path>
                       </g>
                       <defs>
                         <clipPath id="clip0_1029_2811">
@@ -537,7 +545,7 @@ const Analytics = () => {
                             height="18.8235"
                             fill="white"
                             transform="translate(0.585938 0.587891)"
-                          />
+                          ></rect>
                         </clipPath>
                       </defs>
                     </svg>
@@ -551,17 +559,12 @@ const Analytics = () => {
                 </div>
               </div>
             </div>
-            <div ref={dropdownRef} className="relative w-1/4">
-              {/* <div
-                className="flex justify-between border-custombordercolor rounded-customBorderRounded border py-4 px-4 items-center cursor-pointer"
-                onClick={handleButtonClickedPopupOpen}
-              > */}
+            <div ref={dropdownRef} className="w-[15%] lg:w-[25%]">
               <div
-                className="flex items-center border border-custombordercolor rounded-customBorderRounded p-4 h-full cursor-pointer"
+                className="flex items-center border border-custombordercolor rounded-customBorderRounded px-4 py-2 h-full cursor-pointer"
                 onClick={handleButtonClickedPopupOpen}
               >
                 <p className="text-base from-neutral-400 font-normal">
-                  {/* {selectedLocation} */}
                   Selected Locations : {selectedAddressesCount}
                 </p>
               </div>

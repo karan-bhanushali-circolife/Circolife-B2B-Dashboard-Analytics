@@ -19,6 +19,7 @@ module.exports = {
       },
       borderRadius: {
         customBorderRounded: "40px",
+        customBorderRoundedTwo: "60px",
       },
       height: {
         customLineHeight: "105px",
